@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { login, register } from '../api/authApi';
+import axios from 'axios';
 
 interface User {
   name: string;
@@ -7,20 +8,38 @@ interface User {
   token: string;
 }
 
+// interface AuthState {
+//   user: User | null;
+//   loading: boolean;
+// }
+
+// const initialState: AuthState = {
+//   user: null,
+//   loading: false
+// };
+
 interface AuthState {
-  user: User | null;
-  loading: boolean;
+  token: string | null;
+  isAuthenticated: boolean;
 }
 
 const initialState: AuthState = {
-  user: null,
-  loading: false
+  token: null,
+  isAuthenticated: false,
 };
 
-// Async Thunks
-export const userLogin = createAsyncThunk('auth/login', async ({ email, password }: { email: string; password: string }) => {
-  return await login(email, password);
-});
+// Async action for login
+export const userLogin = createAsyncThunk(
+  "auth/login",
+  async (credentials: { email: string; password: string }, { rejectWithValue }) => {
+    try {
+      const response = await axios.post("http://localhost:5000/api/auth/login", credentials);
+      return response.data.token; // Returning token
+    } catch (error:any) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
 
 export const userRegister = createAsyncThunk('auth/register', async (user: { name: string; email: string; password: string }) => {
   return await register(user);
@@ -28,22 +47,20 @@ export const userRegister = createAsyncThunk('auth/register', async (user: { nam
 
 // Auth Slice
 const authSlice = createSlice({
-  name: 'auth',
+  name: "auth",
   initialState,
   reducers: {
     logout: (state) => {
-      state.user = null;
-    }
+      state.token = null;
+      state.isAuthenticated = false;
+    },
   },
   extraReducers: (builder) => {
-    builder
-      .addCase(userLogin.fulfilled, (state, action) => {
-        state.user = action.payload.user;
-      })
-      .addCase(userRegister.fulfilled, (state, action) => {
-        state.user = action.payload.user;
-      });
-  }
+    builder.addCase(userLogin.fulfilled, (state, action) => {
+      state.token = action.payload;
+      state.isAuthenticated = true;
+    });
+  },
 });
 
 export const { logout } = authSlice.actions;
