@@ -1,54 +1,85 @@
-# React + TypeScript + Vite
+# Expense Tracker Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is the frontend for the **Expense Tracker Application**, built using React, Material UI, and Redux. It helps users track their income and expenses efficiently.
 
-Currently, two official plugins are available:
+🌐 **Live Full-Stack Application:**  
+👉 [Expense Tracker (Deployed)](https://expense-tracker-frontend-2gwb.onrender.com)  
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## Expanding the ESLint configuration
+## 🚀 Getting Started
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### 1️⃣ Install Dependencies  
+Open your terminal and run the following commands:
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+```sh
+cd expense-tracker-frontend
+npm i
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+---
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## 🔑 Login Credentials  
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
-```
+Use the following credentials to log in:
+
+- **Email:** `m@gmail.com`  
+- **Password:** `123`
+
+---
+
+## 🔥 Features
+
+### ✅ **1. Redux Token Storage**  
+Once logged in, Redux will store your **authentication token**.
+
+### ✅ **2. Update Income**  
+Click on the **Income** card to update your income.
+
+### ✅ **3. Add Expenses**  
+Navigate to the **Expense** tab to add your expenses.
+
+### ✅ **4. Search & Sort Expenses**  
+Use the search and sorting options to find specific expenses.
+
+### ✅ **5. Full CRUD Operations**  
+- **Create** new expenses  
+- **Read** all expenses  
+- **Update** existing expenses  
+- **Delete** unwanted expenses  
+
+### ✅ **6. Graphical Representation (Bar Chart 📊)**  
+- View your **Income vs. Expenses** in an interactive **bar chart**.  
+- Helps analyze spending patterns visually.  
+
+### ✅ **7. Generate Reports**  
+- Go to the **Report** tab to view a summary.  
+- Download the report for further analysis.
+
+### ✅ **8. Logout & Login as Another User**  
+Log out whenever you need to log in with another account.
+
+### ✅ **9. Sign Up as a New User**  
+- Go to the **Sign Up** page and register.  
+- **(Email ID must be unique).**  
+- Log in using the new credentials.
+
+---
+
+## ⚠️ Backend Issue & Workaround
+
+There is a **known issue in the backend** at **`server.js` (Lines 38-40)**:  
+- The condition `if (!income)` throws an error if `amount === 0`, preventing updates.
+
+### 🔧 **Workaround: Use Swagger API**  
+1. **Authorize yourself** using the token from Redux.  
+2. Open the backend Swagger API:  
+   👉 [Expense Tracker API Docs](https://expense-tracker-backend-1e0i.onrender.com/api-docs/)  
+3. **Manually post income** using Swagger.  
+4. Once done, go back to the frontend and continue exploring.
+
+---
+
+## 🎯 Keep Exploring!  
+Now that your setup is ready, start using the **Expense Tracker** and manage your finances effectively. 🚀
