@@ -8,24 +8,19 @@ interface User {
   token: string;
 }
 
-// interface AuthState {
-//   user: User | null;
-//   loading: boolean;
-// }
-
-// const initialState: AuthState = {
-//   user: null,
-//   loading: false
-// };
-
 interface AuthState {
   token: string | null;
   isAuthenticated: boolean;
 }
 
+// const initialState: AuthState = {
+//   token: null,
+//   isAuthenticated: false,
+// };
+
 const initialState: AuthState = {
-  token: null,
-  isAuthenticated: false,
+  token: localStorage.getItem("token") || null, // Load token from localStorage on app start
+  isAuthenticated: !!localStorage.getItem("token"), // Set authentication state
 };
 
 // Async action for login
@@ -53,12 +48,14 @@ const authSlice = createSlice({
     logout: (state) => {
       state.token = null;
       state.isAuthenticated = false;
+      localStorage.removeItem("token");
     },
   },
   extraReducers: (builder) => {
     builder.addCase(userLogin.fulfilled, (state, action) => {
       state.token = action.payload;
       state.isAuthenticated = true;
+      localStorage.setItem("token", action.payload);
     });
   },
 });
