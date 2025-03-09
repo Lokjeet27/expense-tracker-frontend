@@ -19,6 +19,9 @@ import NotificationsIcon from "@mui/icons-material/Notifications";
 import { mainListItems } from "./listItems";
 import CardItems from "./CardItems";
 import ExpenseBarChart from "./ExpenseBarChart";
+import { Paper } from "@mui/material";
+import { grey } from "@mui/material/colors";
+import ExpenseManager from "./ExpenseManager";
 
 const drawerWidth: number = 240;
 
@@ -144,13 +147,16 @@ export default function Dashboard() {
             {mainListItems}
             <Divider sx={{ my: 1 }} />
             {/* {secondaryListItems} */}
-          </List>
+          </List>   
         </Drawer>
         <ContentContainer>
           <Grid container justifyContent="center">
             <Grid item xs={12} sm={8} md={6}>
-              <CardItems />
-              <ExpenseBarChart/>
+            <Paper sx={{padding: 2,backgroundColor: '#d5ffed',borderRadius: 4}}>
+              {/* <CardItems />
+              <ExpenseBarChart/> */}
+              <ExpenseManager/>
+            </Paper>
             </Grid>
           </Grid>
         </ContentContainer>
