@@ -31,14 +31,14 @@
 //     const fetchData = async () => {
 //       try {
 //         // Fetch income
-//         const incomeResponse = await axios.get("http://localhost:5000/api/income", {
+//         const incomeResponse = await axios.get("https://expense-tracker-backend-1e0i.onrender.com/api/income", {
 //           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
 //         });
 
 //         const income = incomeResponse.data.amount || 0;
 
 //         // Fetch expenses
-//         const expensesResponse = await axios.get("http://localhost:5000/api/expenses", {
+//         const expensesResponse = await axios.get("https://expense-tracker-backend-1e0i.onrender.com/api/expenses", {
 //           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
 //         });
 
@@ -225,14 +225,14 @@ const ExpenseReport: React.FC = () => {
     const fetchData = async () => {
       try {
         // Fetch income
-        const incomeResponse = await axios.get("http://localhost:5000/api/income", {
+        const incomeResponse = await axios.get("https://expense-tracker-backend-1e0i.onrender.com/api/income", {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         });
 
         const income = incomeResponse.data.amount || 0;
 
         // Fetch expenses
-        const expensesResponse = await axios.get("http://localhost:5000/api/expenses", {
+        const expensesResponse = await axios.get("https://expense-tracker-backend-1e0i.onrender.com/api/expenses", {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         });
 

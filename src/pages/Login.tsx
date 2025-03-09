@@ -14,7 +14,7 @@ const Login = () => {
 
   const handleSubmit = async () => {
     try {
-      const response = await axios.post("http://localhost:5000/api/auth/login", { email, password });
+      const response = await axios.post("https://expense-tracker-backend-1e0i.onrender.com/api/auth/login", { email, password });
 
       // localStorage.setItem("token",response.data.token);
 

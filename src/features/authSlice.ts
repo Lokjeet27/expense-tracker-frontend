@@ -1,22 +1,14 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { login, register } from '../api/authApi';
+import { register } from '../api/authApi';
 import axios from 'axios';
 
-interface User {
-  name: string;
-  email: string;
-  token: string;
-}
 
 interface AuthState {
   token: string | null;
   isAuthenticated: boolean;
 }
 
-// const initialState: AuthState = {
-//   token: null,
-//   isAuthenticated: false,
-// };
+
 
 const initialState: AuthState = {
   token: localStorage.getItem("token") || null, // Load token from localStorage on app start
@@ -28,7 +20,7 @@ export const userLogin = createAsyncThunk(
   "auth/login",
   async (credentials: { email: string; password: string }, { rejectWithValue }) => {
     try {
-      const response = await axios.post("http://localhost:5000/api/auth/login", credentials);
+      const response = await axios.post("https://expense-tracker-backend-1e0i.onrender.com/api/auth/login", credentials);
       return response.data.token; // Returning token
     } catch (error:any) {
       return rejectWithValue(error.response.data);

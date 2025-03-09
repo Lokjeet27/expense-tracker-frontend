@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import  { useEffect, useState } from "react";
 import axios from "axios";
 import { Box, Grid, CircularProgress, Dialog, DialogTitle, DialogContent, DialogActions, TextField, Button } from "@mui/material";
 import ItemCard from "./CardLayout";
@@ -20,14 +20,14 @@ const CardItems = () => {
         }
 
         // Fetch income
-        const incomeResponse = await axios.get("http://localhost:5000/api/income", {
+        const incomeResponse = await axios.get("https://expense-tracker-backend-1e0i.onrender.com/api/income", {
           headers: { Authorization: `Bearer ${token}` },
         });
 
         const fetchedIncome = incomeResponse.data.amount || null;
 
         // Fetch total expenses
-        const expensesResponse = await axios.get("http://localhost:5000/api/expenses", {
+        const expensesResponse = await axios.get("https://expense-tracker-backend-1e0i.onrender.com/api/expenses", {
           headers: { Authorization: `Bearer ${token}` },
         });
 
@@ -74,7 +74,7 @@ const CardItems = () => {
       }
   
       await axios.put( // Change POST to PUT if required by API
-        "http://localhost:5000/api/income",
+        "https://expense-tracker-backend-1e0i.onrender.com/api/income",
         { amount: incomeAmount },
         { 
           headers: { 

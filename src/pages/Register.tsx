@@ -23,7 +23,7 @@ const Register = () => {
     };
 
     try {
-      const response = await axios.post('http://localhost:5000/api/auth/register', userData);
+      const response = await axios.post('https://expense-tracker-backend-1e0i.onrender.com/api/auth/register', userData);
       
       if (response.status === 201) {
         setSuccess(true);

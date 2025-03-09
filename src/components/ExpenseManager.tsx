@@ -29,7 +29,6 @@ const ExpenseManager: React.FC = () => {
   const [openDialog, setOpenDialog] = useState(false);
   const [editMode, setEditMode] = useState(false);
   const [selectedExpense, setSelectedExpense] = useState<any>(null);
-  const [deleteConfirm, setDeleteConfirm] = useState(false);
   const [snackbar, setSnackbar] = useState({ open: false, message: "", severity: "success" as "success" | "error" });
   const [search, setSearch] = useState("");
   const [sortOrder, setSortOrder] = useState("asc");
@@ -49,7 +48,7 @@ const ExpenseManager: React.FC = () => {
     }
 
     try {
-      const response = await axios.get("http://localhost:5000/api/expenses", {
+      const response = await axios.get("https://expense-tracker-backend-1e0i.onrender.com/api/expenses", {
         headers: { Authorization: `Bearer ${token}` },
       });
       setExpenses(response.data);
@@ -68,13 +67,13 @@ const ExpenseManager: React.FC = () => {
     try {
       if (editMode && selectedExpense) {
         // Update expense
-        await axios.put(`http://localhost:5000/api/expenses/${selectedExpense.id}`, expenseData, {
+        await axios.put(`https://expense-tracker-backend-1e0i.onrender.com/api/expenses/${selectedExpense.id}`, expenseData, {
           headers: { Authorization: `Bearer ${token}` },
         });
         setSnackbar({ open: true, message: "Expense updated successfully", severity: "success" });
       } else {
         // Add new expense
-        await axios.post("http://localhost:5000/api/expenses", expenseData, {
+        await axios.post("https://expense-tracker-backend-1e0i.onrender.com/api/expenses", expenseData, {
           headers: { Authorization: `Bearer ${token}` },
         });
         setSnackbar({ open: true, message: "Expense added successfully", severity: "success" });
@@ -100,7 +99,7 @@ const ExpenseManager: React.FC = () => {
   const handleDeleteExpense = async (id: number) => {
     if (!window.confirm("Are you sure you want to delete this expense?")) return;
     try {
-      await axios.delete(`http://localhost:5000/api/expenses/${id}`, {
+      await axios.delete(`https://expense-tracker-backend-1e0i.onrender.com/api/expenses/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setSnackbar({ open: true, message: "Expense deleted successfully", severity: "success" });

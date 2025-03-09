@@ -2,7 +2,7 @@ import axios from "axios";
 import store  from "../redux/store"; // Import store
 
 const axiosInstance = axios.create({
-  baseURL: "http://localhost:5000/api",
+  baseURL: "https://expense-tracker-backend-1e0i.onrender.com/api",
 });
 
 // Automatically attach token to requests

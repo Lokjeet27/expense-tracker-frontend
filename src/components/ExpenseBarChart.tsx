@@ -28,7 +28,7 @@ const ExpenseBarChart: React.FC = () => {
       }
 
       try {
-        const response = await axios.get("http://localhost:5000/api/expenses", {
+        const response = await axios.get("https://expense-tracker-backend-1e0i.onrender.com/api/expenses", {
           headers: {
             Authorization: `Bearer ${token}`, // Attach token from Redux
           },
