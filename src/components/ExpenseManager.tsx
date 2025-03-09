@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import {
@@ -30,9 +29,12 @@ const ExpenseManager: React.FC = () => {
   const [openDialog, setOpenDialog] = useState(false);
   const [editMode, setEditMode] = useState(false);
   const [selectedExpense, setSelectedExpense] = useState<any>(null);
+  const [deleteConfirm, setDeleteConfirm] = useState(false);
   const [snackbar, setSnackbar] = useState({ open: false, message: "", severity: "success" as "success" | "error" });
   const [search, setSearch] = useState("");
   const [sortOrder, setSortOrder] = useState("asc");
+
+  const [expenseData, setExpenseData] = useState({ type: "Others", amount: "" });
 
   const expenseTypes = ["Food", "Rent", "Transport", "Entertainment", "Others"];
 
@@ -57,6 +59,57 @@ const ExpenseManager: React.FC = () => {
     }
   };
 
+  const handleAddOrUpdateExpense = async () => {
+    if (!expenseData.amount || Number(expenseData.amount) <= 0) {
+      setSnackbar({ open: true, message: "Amount must be a positive number", severity: "error" });
+      return;
+    }
+
+    try {
+      if (editMode && selectedExpense) {
+        // Update expense
+        await axios.put(`http://localhost:5000/api/expenses/${selectedExpense.id}`, expenseData, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setSnackbar({ open: true, message: "Expense updated successfully", severity: "success" });
+      } else {
+        // Add new expense
+        await axios.post("http://localhost:5000/api/expenses", expenseData, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setSnackbar({ open: true, message: "Expense added successfully", severity: "success" });
+      }
+
+      fetchExpenses();
+      setOpenDialog(false);
+      setExpenseData({ type: "Others", amount: "" });
+      setEditMode(false);
+    } catch (error: any) {
+      console.error("Error saving expense:", error.response?.data || error.message);
+      setSnackbar({ open: true, message: "Failed to save expense", severity: "error" });
+    }
+  };
+
+  const handleEditClick = (expense: any) => {
+    setSelectedExpense(expense);
+    setExpenseData({ type: expense.type, amount: expense.amount });
+    setEditMode(true);
+    setOpenDialog(true);
+  };
+
+  const handleDeleteExpense = async (id: number) => {
+    if (!window.confirm("Are you sure you want to delete this expense?")) return;
+    try {
+      await axios.delete(`http://localhost:5000/api/expenses/${id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setSnackbar({ open: true, message: "Expense deleted successfully", severity: "success" });
+      fetchExpenses();
+    } catch (error) {
+      console.error("Error deleting expense:", error);
+      setSnackbar({ open: true, message: "Failed to delete expense", severity: "error" });
+    }
+  };
   const filteredExpenses = expenses
     .filter((expense) => (search ? expense.type.toLowerCase().includes(search.toLowerCase()) : true))
     .sort((a, b) => (sortOrder === "asc" ? a.amount - b.amount : b.amount - a.amount));
@@ -79,12 +132,12 @@ const ExpenseManager: React.FC = () => {
         value={search}
         onChange={(e) => setSearch(e.target.value)}
       />
-      
-      <Button variant="contained" color="primary" startIcon={<Add />} onClick={() => setOpenDialog(true)} sx={{ mr: 2 }}>
+
+      <Button variant="contained" sx={{ backgroundColor: "#6fffc1", color: "#000", mr: 2 }} startIcon={<Add />} onClick={() => setOpenDialog(true)}>
         Add Expense
       </Button>
-      
-      <Button variant="contained" color="secondary" startIcon={<Sort />} onClick={toggleSortOrder}>
+
+      <Button variant="contained" sx={{ backgroundColor: "#cca3ff", color: "#000" }} startIcon={<Sort />} onClick={toggleSortOrder}>
         Sort by Amount ({sortOrder === "asc" ? "Ascending" : "Descending"})
       </Button>
 
@@ -99,15 +152,15 @@ const ExpenseManager: React.FC = () => {
           </TableHead>
           <TableBody>
             {filteredExpenses.length > 0 ? (
-              filteredExpenses.map((expense) => ( 
+              filteredExpenses.map((expense) => (
                 <TableRow key={expense.id}>
                   <TableCell>{expense.type}</TableCell>
                   <TableCell>${expense.amount}</TableCell>
-                  <TableCell sx={{display: 'flex', justifyContent: 'center' }}>
-                    <Button variant="contained" color="primary" startIcon={<Edit />} onClick={() => setOpenDialog(true)} sx={{ mr: 1, }}>
+                  <TableCell sx={{ display: "flex", justifyContent: "center" }}>
+                    <Button variant="contained" sx={{ backgroundColor: "#5dadec", color: "#000", mr: 1 }} startIcon={<Edit />} onClick={() => handleEditClick(expense)}>
                       Edit
                     </Button>
-                    <Button variant="contained" color="error" startIcon={<Delete />} onClick={() => console.log("Delete", expense.id)}>
+                    <Button variant="contained" sx={{ backgroundColor: "#fd0e35", color: "#000" }} startIcon={<Delete />} onClick={() => { handleDeleteExpense(expense.id)}}>
                       Del
                     </Button>
                   </TableCell>
@@ -123,6 +176,22 @@ const ExpenseManager: React.FC = () => {
           </TableBody>
         </Table>
       </TableContainer>
+
+      {/* Add/Edit Dialog */}
+      <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
+        <DialogTitle>{editMode ? "Edit Expense" : "Add Expense"}</DialogTitle>
+        <DialogContent>
+          <Select fullWidth value={expenseData.type} onChange={(e) => setExpenseData({ ...expenseData, type: e.target.value })}>
+            {expenseTypes.map((type) => (
+              <MenuItem key={type} value={type}>{type}</MenuItem>
+            ))}
+          </Select>
+          <TextField fullWidth label="Amount" type="number" value={expenseData.amount} onChange={(e) => setExpenseData({ ...expenseData, amount: e.target.value })} sx={{ mt: 2 }} />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleAddOrUpdateExpense}>Save</Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 };
