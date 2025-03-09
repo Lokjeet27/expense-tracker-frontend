@@ -10,18 +10,19 @@
 // import Divider from "@mui/material/Divider";
 // import IconButton from "@mui/material/IconButton";
 // import Badge from "@mui/material/Badge";
-// import Container from "@mui/material/Container";
 // import Grid from "@mui/material/Grid";
 // import MenuIcon from "@mui/icons-material/Menu";
 // import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 // import NotificationsIcon from "@mui/icons-material/Notifications";
-// // import { mainListItems, secondaryListItems } from './listItems';
-// import { mainListItems } from "./listItems";
+// import { Paper, ListItemButton, ListItemIcon, ListItemText } from "@mui/material";
+// import DashboardIcon from "@mui/icons-material/Dashboard";
+// import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+// import BarChartIcon from "@mui/icons-material/BarChart";
+// import { grey } from "@mui/material/colors";
 // import CardItems from "./CardItems";
 // import ExpenseBarChart from "./ExpenseBarChart";
-// import { Paper } from "@mui/material";
-// import { grey } from "@mui/material/colors";
 // import ExpenseManager from "./ExpenseManager";
+// import ExpenseReport from "./ExpenseReport"; // Assuming you have this
 
 // const drawerWidth: number = 240;
 
@@ -33,7 +34,7 @@
 //   shouldForwardProp: (prop) => prop !== "open",
 // })<AppBarProps>(({ theme, open }) => ({
 //   zIndex: theme.zIndex.drawer + 1,
-//   backgroundColor: "#2D6A4F", // New background color for header
+//   backgroundColor: "#2D6A4F",
 //   transition: theme.transitions.create(["width", "margin"], {
 //     easing: theme.transitions.easing.sharp,
 //     duration: theme.transitions.duration.leavingScreen,
@@ -75,7 +76,7 @@
 // }));
 
 // const ContentContainer = styled(Box)(({ theme }) => ({
-//   backgroundColor: "#F0F4F8", // Softer background color for the content area
+//   backgroundColor: "#F0F4F8",
 //   minHeight: "100vh",
 //   width: "100%",
 //   paddingTop: theme.spacing(10),
@@ -87,20 +88,24 @@
 
 // export default function Dashboard() {
 //   const [open, setOpen] = React.useState(true);
+//   const [selectedItem, setSelectedItem] = React.useState("Dashboard");
+
 //   const toggleDrawer = () => {
 //     setOpen(!open);
 //   };
+
+//   const menuItems = [
+//     { text: "Dashboard", icon: <DashboardIcon /> },
+//     { text: "Expense", icon: <ShoppingCartIcon /> },
+//     { text: "Report", icon: <BarChartIcon /> },
+//   ];
 
 //   return (
 //     <ThemeProvider theme={defaultTheme}>
 //       <Box sx={{ display: "flex" }}>
 //         <CssBaseline />
 //         <AppBar position="absolute" open={open}>
-//           <Toolbar
-//             sx={{
-//               pr: "24px",
-//             }}
-//           >
+//           <Toolbar sx={{ pr: "24px" }}>
 //             <IconButton
 //               edge="start"
 //               color="inherit"
@@ -113,13 +118,7 @@
 //             >
 //               <MenuIcon />
 //             </IconButton>
-//             <Typography
-//               component="h1"
-//               variant="h6"
-//               color="inherit"
-//               noWrap
-//               sx={{ flexGrow: 1, textAlign: "center" }}
-//             >
+//             <Typography component="h1" variant="h6" color="inherit" noWrap sx={{ flexGrow: 1, textAlign: "center" }}>
 //               Expense Tracker
 //             </Typography>
 //             <IconButton color="inherit">
@@ -144,19 +143,35 @@
 //           </Toolbar>
 //           <Divider />
 //           <List component="nav">
-//             {mainListItems}
-//             <Divider sx={{ my: 1 }} />
-//             {/* {secondaryListItems} */}
-//           </List>   
+//             {menuItems.map((item) => (
+//               <ListItemButton
+//                 key={item.text}
+//                 selected={selectedItem === item.text}
+//                 onClick={() => setSelectedItem(item.text)}
+//                 sx={{
+//                   backgroundColor: selectedItem === item.text ? grey[300] : "inherit",
+//                   "&:hover": { backgroundColor: grey[400] },
+//                 }}
+//               >
+//                 <ListItemIcon sx={{ color: "inherit" }}>{item.icon}</ListItemIcon>
+//                 <ListItemText primary={item.text} />
+//               </ListItemButton>
+//             ))}
+//           </List>
 //         </Drawer>
 //         <ContentContainer>
 //           <Grid container justifyContent="center">
 //             <Grid item xs={12} sm={8} md={6}>
-//             <Paper sx={{padding: 2,backgroundColor: '#d5ffed',borderRadius: 4}}>
-//               <CardItems />
-//               <ExpenseBarChart/> 
-//               <ExpenseManager/>
-//             </Paper>
+//               <Paper sx={{ padding: 2, backgroundColor: "#d5ffed", borderRadius: 4 }}>
+//                 {selectedItem === "Dashboard" && (
+//                   <>
+//                     <CardItems />
+//                     <ExpenseBarChart />
+//                   </>
+//                 )}
+//                 {selectedItem === "Expense" && <ExpenseManager />}
+//                 {selectedItem === "Report" && <ExpenseReport />}
+//               </Paper>
 //             </Grid>
 //           </Grid>
 //         </ContentContainer>
@@ -176,17 +191,21 @@ import Toolbar from "@mui/material/Toolbar";
 import List from "@mui/material/List";
 import Typography from "@mui/material/Typography";
 import Divider from "@mui/material/Divider";
-import IconButton from "@mui/material/IconButton";
+import {IconButton,Button} from "@mui/material";
 import Badge from "@mui/material/Badge";
 import Grid from "@mui/material/Grid";
 import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import NotificationsIcon from "@mui/icons-material/Notifications";
+import ExitToAppIcon from "@mui/icons-material/ExitToApp"; // Logout icon
+import Snackbar from "@mui/material/Snackbar";
+import MuiAlert from "@mui/material/Alert";
 import { Paper, ListItemButton, ListItemIcon, ListItemText } from "@mui/material";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import BarChartIcon from "@mui/icons-material/BarChart";
 import { grey } from "@mui/material/colors";
+import { useNavigate } from "react-router-dom"; // For redirection
 import CardItems from "./CardItems";
 import ExpenseBarChart from "./ExpenseBarChart";
 import ExpenseManager from "./ExpenseManager";
@@ -257,9 +276,25 @@ const defaultTheme = createTheme();
 export default function Dashboard() {
   const [open, setOpen] = React.useState(true);
   const [selectedItem, setSelectedItem] = React.useState("Dashboard");
+  const [snackbarOpen, setSnackbarOpen] = React.useState(false);
+  const navigate = useNavigate();
 
   const toggleDrawer = () => {
     setOpen(!open);
+  };
+
+  // Logout function
+  const handleLogout = () => {
+    localStorage.removeItem("token"); // Remove token
+    setSnackbarOpen(true); // Show logout success message
+
+    setTimeout(() => {
+      navigate("/login"); // Redirect to login after 1.5 seconds
+    }, 1500);
+  };
+
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
   };
 
   const menuItems = [
@@ -294,6 +329,12 @@ export default function Dashboard() {
                 <NotificationsIcon />
               </Badge>
             </IconButton>
+
+            {/* Logout Button */}
+            <Button color="inherit" sx={{ml: 2,backgroundColor: '#c81d25'}} onClick={handleLogout}>
+              <Typography sx={{ textTransform: 'none',mr:1 }}> LogOut</Typography>
+              <ExitToAppIcon />
+            </Button>
           </Toolbar>
         </AppBar>
         <Drawer variant="permanent" open={open}>
@@ -343,10 +384,18 @@ export default function Dashboard() {
             </Grid>
           </Grid>
         </ContentContainer>
+
+        {/* Snackbar for logout message */}
+        <Snackbar open={snackbarOpen} autoHideDuration={3000} onClose={handleSnackbarClose}>
+          <MuiAlert onClose={handleSnackbarClose} severity="success" sx={{ width: "100%" }}>
+            Logout successful!
+          </MuiAlert>
+        </Snackbar>
       </Box>
     </ThemeProvider>
   );
 }
+
 
 
 
