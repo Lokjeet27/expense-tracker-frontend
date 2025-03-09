@@ -16,8 +16,10 @@ const Login = () => {
     try {
       const response = await axios.post("http://localhost:5000/api/auth/login", { email, password });
 
+      // localStorage.setItem("token",response.data.token);
+
       // Dispatch action to store token in Redux
-      dispatch(userLogin({ email, password }));
+      await dispatch(userLogin({ email, password }));
       console.log(response)
 
       navigate("/dashboard");
