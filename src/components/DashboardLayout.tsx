@@ -190,7 +190,7 @@ import { grey } from "@mui/material/colors";
 import CardItems from "./CardItems";
 import ExpenseBarChart from "./ExpenseBarChart";
 import ExpenseManager from "./ExpenseManager";
-// import ReportComponent from "./ReportComponent"; // Assuming you have this
+import ExpenseReport from "./ExpenseReport"; // Assuming you have this
 
 const drawerWidth: number = 240;
 
@@ -338,7 +338,7 @@ export default function Dashboard() {
                   </>
                 )}
                 {selectedItem === "Expense" && <ExpenseManager />}
-                {/* {selectedItem === "Report" && <ReportComponent />} */}
+                {selectedItem === "Report" && <ExpenseReport />}
               </Paper>
             </Grid>
           </Grid>
